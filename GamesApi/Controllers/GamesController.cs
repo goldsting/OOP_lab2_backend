@@ -26,6 +26,9 @@ ControllerBase {
     public ActionResult<Game> Create([FromBody] Game game) {
         game.Id = GamesStore.NextId();
         GamesStore.Games.Add(game);
+        if (game.Title is null) {
+            return BadRequest(new { message = $"Название игры не может быть пустым" });
+        }
         return CreatedAtAction(nameof(GetById), new { id = game.Id }, game);
     }
 
@@ -50,4 +53,5 @@ ControllerBase {
         game.ReleaseYear = updated.ReleaseYear;
         return Ok(game);
     }
+    
 }
